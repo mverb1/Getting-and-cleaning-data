@@ -28,7 +28,7 @@ colnames(activityLabels) <- c('activityId','activityType')
 
 mrg_train <- cbind(y_train, subject_train, x_train)
 mrg_test <- cbind(y_test, subject_test, x_test)
-setAllInOne <- rbind(mrg_train, mrg_test) ## merge all together
+AllInOne <- rbind(mrg_train, mrg_test) ## merge all together
 
 colNames <- colnames(setAllInOne)
 mean_and_std <- (grepl("activityId" , colNames) | 
@@ -36,13 +36,13 @@ mean_and_std <- (grepl("activityId" , colNames) |
                      grepl("mean.." , colNames) | 
                      grepl("std.." , colNames) 
 )
-setForMeanAndStd <- setAllInOne[ , mean_and_std == TRUE] ## extract mean and st deviation for every measurement
+ForMeanAndStd <- AllInOne[ , mean_and_std == TRUE] ## extract mean and st deviation for every measurement
 
-setWithActivityNames <- merge(setForMeanAndStd, activityLabels,
+WithActivityNames <- merge(ForMeanAndStd, activityLabels,
                               by='activityId',
                               all.x=TRUE) ## name the activities in the dataset
 
-secTidySet <- aggregate(. ~subjectId + activityId, setWithActivityNames, mean)
+secTidySet <- aggregate(. ~subjectId + activityId, WithActivityNames, mean)
 secTidySet <- secTidySet[order(secTidySet$subjectId, secTidySet$activityId),] 
 
 write.table(secTidySet, "secTidySet.txt", row.name=FALSE) ## create and write a second independent 
